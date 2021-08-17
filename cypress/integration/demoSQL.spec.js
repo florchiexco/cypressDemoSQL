@@ -55,3 +55,34 @@ it('Verificar que ninguna de las mascotas sea gato', () => {
       expect(array).to.be.empty;
     });
 })
+
+it('Verificar que todos las columnas en la tabla persona existan', () => {
+    cy.task(
+      "queryDb",
+      `SELECT * FROM cypressdemo.persons LIMIT 1;`
+    ).then(array => {
+      expect(array[0]).to.have.all.keys('name', 'address','age', 'id');
+    });
+})
+
+it('Insertar una nueva persona y comprobar que se haya logrado exitosamente', () => {
+    cy.task(
+      "queryDb",
+      `INSERT INTO cypressdemo.persons (name, age, address) VALUES ('Pablo Gonzalez', 27, 'Calle 67');`
+    );
+    cy.task(
+        "queryDb",
+        `SELECT * FROM cypressdemo.persons WHERE name LIKE 'Pablo Gonzalez';`
+      ).then(array => {
+      expect(array[0]).to.exist;
+    });
+})
+
+it('Comprobar que una persona NO exista en la tabla', () => {
+    cy.task(
+        "queryDb",
+        `SELECT * FROM cypressdemo.persons WHERE name LIKE 'Jane Doe';`
+      ).then(array => {
+      expect(array[0]).to.not.exist;
+    });
+})
