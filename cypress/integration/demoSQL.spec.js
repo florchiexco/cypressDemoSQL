@@ -46,3 +46,12 @@ it('Verificar que una de las mascotas sea perro', () => {
       expect(typeArray).to.include("Dog");
     });
 })
+
+it('Verificar que ninguna de las mascotas sea gato', () => {
+    cy.task(
+      "queryDb",
+      `SELECT type FROM cypressdemo.pets p WHERE p.type LIKE 'Cat';`
+    ).then(array => {
+      expect(array).to.be.empty;
+    });
+})
